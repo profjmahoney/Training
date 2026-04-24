@@ -1,1 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethical Theories Comparison Chart</title>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f6f9;
+        color: #333;
+    }
+
+    header {
+        background: #1f3c88;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .controls {
+        text-align: center;
+        margin: 15px;
+    }
+
+    button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background: #1f3c88;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #16306b;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .card.active {
+        border: 3px solid #1f3c88;
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #1f3c88;
+    }
+
+    ul {
+        padding-left: 20px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    footer {
+        text-align: center;
+        padding: 10px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Ethical Theories Comparison Chart</h1>
+</header>
+
+<div class="controls">
+    <button onclick="showSection('all')">Show All</button>
+    <button onclick="showSection('strengths')">Highlight Strengths</button>
+    <button onclick="showSection('weaknesses')">Highlight Weaknesses</button>
+</div>
+
+<main class="container" role="region" aria-label="Ethical theories comparison">
+
+    <div class="card" onclick="toggleCard(this)">
+        <h2>Utilitarianism</h2>
+        <p><strong>Core Principle:</strong> Greatest good for the most people.</p>
+
+        <div class="strengths">
+            <strong>Strengths:</strong>
+            <ul>
+                <li>Outcome-focused</li>
+                <li>Flexible</li>
+                <li>Common in policy & tech ethics</li>
+            </ul>
+        </div>
+
+        <div class="weaknesses">
+            <strong>Weaknesses:</strong>
+            <ul>
+                <li>May justify harm to individuals</li>
+                <li>Hard to predict consequences</li>
+                <li>Ignores intent</li>
+            </ul>
+        </div>
+
+        <p><strong>Best For:</strong> Algorithms, automation, business decisions</p>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+        <h2>Deontology</h2>
+        <p><strong>Core Principle:</strong> Follow moral rules regardless of outcomes.</p>
+
+        <div class="strengths">
+            <strong>Strengths:</strong>
+            <ul>
+                <li>Respects rights</li>
+                <li>Consistent</li>
+                <li>Strong on justice</li>
+            </ul>
+        </div>
+
+        <div class="weaknesses">
+            <strong>Weaknesses:</strong>
+            <ul>
+                <li>Rigid</li>
+                <li>May ignore impact</li>
+            </ul>
+        </div>
+
+        <p><strong>Best For:</strong> Privacy, consent, whistleblowing</p>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+        <h2>Virtue Ethics</h2>
+        <p><strong>Core Principle:</strong> Focus on moral character.</p>
+
+        <div class="strengths">
+            <strong>Strengths:</strong>
+            <ul>
+                <li>Encourages integrity</li>
+                <li>Long-term development</li>
+                <li>Flexible</li>
+            </ul>
+        </div>
+
+        <div class="weaknesses">
+            <strong>Weaknesses:</strong>
+            <ul>
+                <li>Can be vague</li>
+                <li>Not always actionable</li>
+            </ul>
+        </div>
+
+        <p><strong>Best For:</strong> Leadership, workplace conduct</p>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+        <h2>Social Contract Theory</h2>
+        <p><strong>Core Principle:</strong> Uphold shared rules for fairness.</p>
+
+        <div class="strengths">
+            <strong>Strengths:</strong>
+            <ul>
+                <li>Encourages cooperation</li>
+                <li>Respects agreements</li>
+                <li>Supports fairness</li>
+            </ul>
+        </div>
+
+        <div class="weaknesses">
+            <strong>Weaknesses:</strong>
+            <ul>
+                <li>Assumes shared agreement</li>
+                <li>May ignore minority voices</li>
+            </ul>
+        </div>
+
+        <p><strong>Best For:</strong> Digital rights, governance, communities</p>
+    </div>
+
+</main>
+
+<footer>
+    Interactive Ethical Theories Learning Tool
+</footer>
+
+<script>
+function toggleCard(card) {
+    card.classList.toggle("active");
+}
+
+function showSection(type) {
+    const strengths = document.querySelectorAll('.strengths');
+    const weaknesses = document.querySelectorAll('.weaknesses');
+
+    if (type === 'all') {
+        strengths.forEach(el => el.classList.remove('hidden'));
+        weaknesses.forEach(el => el.classList.remove('hidden'));
+    }
+
+    if (type === 'strengths') {
+        strengths.forEach(el => el.classList.remove('hidden'));
+        weaknesses.forEach(el => el.classList.add('hidden'));
+    }
+
+    if (type === 'weaknesses') {
+        strengths.forEach(el => el.classList.add('hidden'));
+        weaknesses.forEach(el => el.classList.remove('hidden'));
+    }
+}
+</script>
+
+</body>
+</html>
