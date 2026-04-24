@@ -1,0 +1,323 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.lesson{padding:1.5rem 0;max-width:660px}
+.progress-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:2rem}
+.progress-fill{height:4px;background:#1D9E75;border-radius:2px;transition:width 0.4s ease}
+.section{display:none}
+.section.active{display:block}
+.section-label{font-size:12px;font-weight:500;color:#1D9E75;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.5rem}
+h2{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:0.5rem}
+.subtitle{font-size:15px;color:var(--color-text-secondary);margin-bottom:2rem;line-height:1.6}
+.theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:2rem}
+.theory-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;cursor:pointer;transition:border-color 0.2s,transform 0.15s;position:relative}
+.theory-card:hover{border-color:var(--color-border-primary);transform:translateY(-1px)}
+.theory-card:focus{outline:3px solid #1D9E75;outline-offset:2px}
+.theory-card.selected{border:2px solid #1D9E75}
+.theory-card .accent{width:28px;height:4px;border-radius:2px;margin-bottom:10px}
+.theory-card h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.theory-card p{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.theory-card .tag{display:inline-block;font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;margin-top:10px}
+.detail-panel{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:2rem;border-left:3px solid #1D9E75;display:none}
+.detail-panel.visible{display:block}
+.detail-panel h4{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.detail-panel p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.pros-cons div{font-size:12px;line-height:1.7}
+.pros-cons .label{font-size:11px;font-weight:500;margin-bottom:4px}
+.pros{color:#0F6E56}.cons{color:#993C1D}
+.scenario-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.scenario-box .scenario-icon{font-size:24px;margin-bottom:8px}
+.scenario-box h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.scenario-box p{font-size:13px;color:var(--color-text-secondary);line-height:1.7}
+.options-list{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+.option-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:0.875rem 1rem;text-align:left;cursor:pointer;font-size:13px;color:var(--color-text-primary);line-height:1.6;transition:border-color 0.2s,background 0.2s}
+.option-btn:hover{background:var(--color-background-secondary);border-color:var(--color-border-secondary)}
+.option-btn:focus{outline:3px solid #1D9E75;outline-offset:2px}
+.option-btn.correct{border:2px solid #1D9E75;background:#E1F5EE;color:#085041}
+.option-btn.incorrect{border:2px solid #993C1D;background:#FAECE7;color:#4A1B0C}
+.option-btn.reveal{border-color:var(--color-border-secondary);opacity:0.6}
+.option-btn:disabled{cursor:default}
+.feedback-box{border-radius:var(--border-radius-md);padding:1rem;margin-bottom:1.5rem;display:none;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:#E1F5EE;color:#085041;border:0.5px solid #5DCAA5}
+.feedback-box.incorrect{background:#FAECE7;color:#4A1B0C;border:0.5px solid #F0997B}
+.feedback-box strong{font-weight:500}
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:1rem}
+.btn{padding:0.625rem 1.25rem;border-radius:var(--border-radius-md);font-size:14px;font-weight:500;cursor:pointer;transition:background 0.15s,transform 0.1s;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-primary)}
+.btn:hover{background:var(--color-background-secondary)}
+.btn:active{transform:scale(0.98)}
+.btn:focus{outline:3px solid #1D9E75;outline-offset:2px}
+.btn:disabled{opacity:0.4;cursor:default}
+.btn-primary{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.btn-primary:hover{background:#0F6E56}
+.step-counter{font-size:13px;color:var(--color-text-secondary)}
+.quiz-question{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:1.25rem;line-height:1.6}
+.score-card{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:2rem;text-align:center;margin-bottom:2rem}
+.score-num{font-size:48px;font-weight:500;color:#1D9E75;margin-bottom:8px}
+.score-label{font-size:14px;color:var(--color-text-secondary)}
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:1rem}
+.badge{display:inline-block;font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;background:#E1F5EE;color:#085041;border:0.5px solid #5DCAA5}
+.tip-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem 1.25rem;margin-bottom:2rem;border-left:3px solid #378ADD}
+.tip-box p{font-size:13px;color:var(--color-text-secondary);line-height:1.7}
+.tip-box strong{color:var(--color-text-primary)}
+.spectrum{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:var(--border-radius-md);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.spectrum-item{flex:1;padding:12px 10px;text-align:center;font-size:12px;line-height:1.5}
+.spectrum-item .s-title{font-weight:500;margin-bottom:4px;font-size:13px}
+</style>
+
+<h2 class="sr-only">Week 1 interactive lesson: introduction to ethical theories in IT</h2>
+<div class="lesson" role="main">
+<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" aria-label="Lesson progress">
+  <div class="progress-fill" id="prog" style="width:20%"></div>
+</div>
+
+<div id="s1" class="section active" aria-label="Section 1 of 5: Introduction">
+  <p class="section-label">Week 1 · Introduction</p>
+  <h2>Why does ethics matter in IT?</h2>
+  <p class="subtitle">Technology shapes nearly every aspect of society — and with it comes moral responsibility. This lesson introduces the four major ethical frameworks you'll use all semester to analyze real-world IT dilemmas.</p>
+  <div class="tip-box"><p><strong>Learning goals:</strong> By the end of this lesson you'll be able to name and describe the four ethical theories, identify which framework is being applied in a scenario, and explain the strengths and limits of each.</p></div>
+  <div class="spectrum" role="img" aria-label="Spectrum from outcome-focused to character-focused showing the four theories">
+    <div class="spectrum-item" style="background:#E1F5EE;color:#085041"><div class="s-title">Utilitarianism</div><div>Outcome-focused</div></div>
+    <div class="spectrum-item" style="background:#E6F1FB;color:#0C447C"><div class="s-title">Deontology</div><div>Duty-focused</div></div>
+    <div class="spectrum-item" style="background:#EEEDFE;color:#3C3489"><div class="s-title">Social contract</div><div>Fairness-focused</div></div>
+    <div class="spectrum-item" style="background:#FAECE7;color:#4A1B0C"><div class="s-title">Virtue ethics</div><div>Character-focused</div></div>
+  </div>
+  <div class="nav-row"><span></span><button class="btn btn-primary" onclick="goTo(2)" aria-label="Continue to the four theories">Explore the theories →</button></div>
+</div>
+
+<div id="s2" class="section" aria-label="Section 2 of 5: The four theories">
+  <p class="section-label">Week 1 · The four theories</p>
+  <h2>Select a theory to explore</h2>
+  <p class="subtitle">Tap each card to learn more about how it works and where its limits are.</p>
+  <div class="theory-grid" role="list">
+    <div class="theory-card" role="listitem button" tabindex="0" aria-pressed="false" id="tc-util" onclick="showDetail('util')" onkeydown="if(event.key==='Enter'||event.key===' ')showDetail('util')">
+      <div class="accent" style="background:#1D9E75" aria-hidden="true"></div>
+      <h3>Utilitarianism</h3>
+      <p>Focus on maximizing overall good and minimizing harm for the greatest number of people.</p>
+      <span class="tag" style="background:#E1F5EE;color:#085041">Outcome-focused</span>
+    </div>
+    <div class="theory-card" role="listitem button" tabindex="0" aria-pressed="false" id="tc-deon" onclick="showDetail('deon')" onkeydown="if(event.key==='Enter'||event.key===' ')showDetail('deon')">
+      <div class="accent" style="background:#378ADD" aria-hidden="true"></div>
+      <h3>Deontology</h3>
+      <p>Follow duties and universal rules regardless of consequences — some actions are right or wrong in themselves.</p>
+      <span class="tag" style="background:#E6F1FB;color:#0C447C">Duty-focused</span>
+    </div>
+    <div class="theory-card" role="listitem button" tabindex="0" aria-pressed="false" id="tc-virt" onclick="showDetail('virt')" onkeydown="if(event.key==='Enter'||event.key===' ')showDetail('virt')">
+      <div class="accent" style="background:#D4537E" aria-hidden="true"></div>
+      <h3>Virtue ethics</h3>
+      <p>Ask what a person of good character would do — emphasizes integrity and professional conduct.</p>
+      <span class="tag" style="background:#FBEAF0;color:#4B1528">Character-focused</span>
+    </div>
+    <div class="theory-card" role="listitem button" tabindex="0" aria-pressed="false" id="tc-soc" onclick="showDetail('soc')" onkeydown="if(event.key==='Enter'||event.key===' ')showDetail('soc')">
+      <div class="accent" style="background:#7F77DD" aria-hidden="true"></div>
+      <h3>Social contract</h3>
+      <p>Evaluate actions by whether they uphold fair rules agreed upon cooperatively by society.</p>
+      <span class="tag" style="background:#EEEDFE;color:#26215C">Fairness-focused</span>
+    </div>
+  </div>
+  <div class="detail-panel" id="detail-util" role="region" aria-live="polite" aria-label="Utilitarianism details">
+    <h4>Utilitarianism in IT</h4>
+    <p>Used to evaluate policies, algorithms, and product decisions. Ask: does this produce the greatest benefit for the most people? A company might collect user data to improve service quality — utilitarianism would weigh that benefit against privacy harms.</p>
+    <div class="pros-cons">
+      <div><div class="label pros">Strengths</div><div class="pros" style="font-size:12px;line-height:1.7">Good for policy decisions<br>Considers broad societal impact<br>Practical and measurable</div></div>
+      <div><div class="label cons">Limits</div><div class="cons" style="font-size:12px;line-height:1.7">Can overlook individual rights<br>Hard to predict all outcomes<br>May justify harm to minorities</div></div>
+    </div>
+  </div>
+  <div class="detail-panel" id="detail-deon" role="region" aria-live="polite" aria-label="Deontology details">
+    <h4>Deontology in IT</h4>
+    <p>Rooted in Kant's categorical imperative: act only on rules you'd want everyone to follow universally. Applied to IT, it means some actions — like lying to users or violating privacy — are simply wrong, regardless of the outcome.</p>
+    <div class="pros-cons">
+      <div><div class="label pros">Strengths</div><div class="pros" style="font-size:12px;line-height:1.7">Protects individual rights<br>Provides clear rules<br>Good for privacy and fairness</div></div>
+      <div><div class="label cons">Limits</div><div class="cons" style="font-size:12px;line-height:1.7">Can be rigid or inflexible<br>May ignore real consequences<br>Conflicting duties are hard to resolve</div></div>
+    </div>
+  </div>
+  <div class="detail-panel" id="detail-virt" role="region" aria-live="polite" aria-label="Virtue ethics details">
+    <h4>Virtue ethics in IT</h4>
+    <p>Developed by Aristotle, this theory asks what a virtuous professional would do. In IT, virtues like honesty, courage, and responsibility guide decisions — for example, a developer who speaks up about a security flaw even when it's inconvenient.</p>
+    <div class="pros-cons">
+      <div><div class="label pros">Strengths</div><div class="pros" style="font-size:12px;line-height:1.7">Encourages strong character<br>Supports professional integrity<br>Flexible and human-centered</div></div>
+      <div><div class="label cons">Limits</div><div class="cons" style="font-size:12px;line-height:1.7">Vague — hard to apply concretely<br>Virtues may vary by culture<br>Less useful for policy rules</div></div>
+    </div>
+  </div>
+  <div class="detail-panel" id="detail-soc" role="region" aria-live="polite" aria-label="Social contract details">
+    <h4>Social contract in IT</h4>
+    <p>Thinkers like Rawls and Locke argue morality is grounded in rules we'd agree to fairly. In IT, this applies to digital rights, terms of service, and community standards. Would users agree to this policy if they didn't know whether they'd be harmed by it?</p>
+    <div class="pros-cons">
+      <div><div class="label pros">Strengths</div><div class="pros" style="font-size:12px;line-height:1.7">Emphasizes fairness and consent<br>Good for evaluating digital rights<br>Grounds policies in shared values</div></div>
+      <div><div class="label cons">Limits</div><div class="cons" style="font-size:12px;line-height:1.7">May exclude minority views<br>Assumes consensus is achievable<br>Abstract "agreement" is hypothetical</div></div>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn" onclick="goTo(1)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(3)">Apply to scenarios →</button>
+  </div>
+</div>
+
+<div id="s3" class="section" aria-label="Section 3 of 5: Apply to scenarios">
+  <p class="section-label">Week 1 · Apply to scenarios</p>
+  <h2>Which theory fits?</h2>
+  <p class="subtitle">Read each IT scenario and decide which ethical framework best describes the reasoning. Select an answer and get instant feedback.</p>
+  <div id="q-container" aria-live="polite"></div>
+  <div class="nav-row">
+    <button class="btn" onclick="goTo(2)">← Back</button>
+    <button class="btn btn-primary" id="next-q-btn" onclick="nextQ()" disabled>Next question →</button>
+  </div>
+</div>
+
+<div id="s4" class="section" aria-label="Section 4 of 5: Quick quiz">
+  <p class="section-label">Week 1 · Quick quiz</p>
+  <h2>Check your understanding</h2>
+  <p class="subtitle">Five multiple-choice questions. Choose the best answer for each.</p>
+  <div id="quiz-container" aria-live="polite"></div>
+  <div class="nav-row">
+    <button class="btn" onclick="goTo(3)">← Back</button>
+    <button class="btn btn-primary" id="quiz-next" onclick="nextQuiz()" disabled>Next →</button>
+  </div>
+</div>
+
+<div id="s5" class="section" aria-label="Section 5 of 5: Summary and results">
+  <p class="section-label">Week 1 · Complete</p>
+  <h2>Lesson complete</h2>
+  <div class="score-card" role="region" aria-label="Your quiz results">
+    <div class="score-num" id="final-score" aria-live="polite">0/5</div>
+    <div class="score-label">Quiz score</div>
+    <div class="badge-row" id="badge-row"></div>
+  </div>
+  <div class="tip-box" style="border-left-color:#1D9E75">
+    <p><strong>Key takeaway:</strong> No single theory has all the answers. Skilled ethical reasoning means knowing when to apply which framework — and understanding what each one misses. You'll practice this all semester.</p>
+  </div>
+  <div style="margin-bottom:1.5rem">
+    <p style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px">Next steps from your Week 1 resources:</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">📺 Watch: Crash Course Philosophy #36 — Utilitarianism (10 min)</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">📺 Watch: Crash Course Philosophy #35 — Kant & Categorical Imperatives (11 min)</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">📝 Complete the Ethical Argument Template worksheet</div>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn" onclick="restart()">↺ Restart lesson</button>
+    <button class="btn btn-primary" onclick="sendPrompt('Can you give me a harder scenario to analyze using the four ethical theories from Week 1?')">Try a harder scenario ↗</button>
+  </div>
+</div>
+</div>
+
+<script>
+const scenarios=[
+  {icon:"🔒",title:"A company's data breach decision",text:"A social media company discovers a data breach affecting 2 million users. The legal team argues they are not technically required to notify users. The ethics team says users have a right to know regardless of the legal obligation.",question:"Which framework best describes the ethics team's argument?",options:["Utilitarianism — notifying users produces the best overall outcome","Deontology — users have a right to know, regardless of consequences","Virtue ethics — a good company would simply do the right thing","Social contract — users agreed to fair data handling when they signed up"],correct:1,feedback:"Correct! The ethics team is using <strong>deontology</strong>: users have an intrinsic right to know, independent of the consequences. This is a duty-based argument. Utilitarianism would focus on weighing the costs and benefits of disclosure."},
+  {icon:"🤖",title:"An algorithm's hiring filter",text:"An HR software algorithm screens job applications and significantly favors candidates from elite universities, reducing callbacks for equally qualified candidates from community colleges.",question:"A critic argues this is unfair because candidates didn't choose the rules before being evaluated. Which framework is the critic applying?",options:["Utilitarianism — the algorithm harms more than it helps","Deontology — the algorithm violates a universal rule of fairness","Social contract — candidates couldn't consent to these criteria","Virtue ethics — the developers lack honesty and integrity"],correct:2,feedback:"Correct! The critic is applying <strong>social contract theory</strong> — the idea that fair rules require consent or agreement from those affected. If candidates had known and accepted these criteria, it might be defensible. They didn't, so it's unjust."},
+  {icon:"💬",title:"A whistleblower's dilemma",text:"A developer discovers their company is secretly selling user location data to advertisers without disclosure. Their manager says staying quiet is best for business. The developer leaks the information to the press.",question:"The developer's decision is best explained by which framework?",options:["Utilitarianism — leaking helps the most people overall","Social contract — users agreed to have private data shared","Virtue ethics — the developer is acting with honesty and courage","Deontology — there is a universal duty to follow company policy"],correct:2,feedback:"Correct! <strong>Virtue ethics</strong> emphasizes moral character. The developer's act of courage and honesty — even at personal risk — is a classic example. Note that utilitarianism could also apply, but virtue ethics specifically highlights character and professional integrity."},
+  {icon:"📊",title:"Content moderation at scale",text:"A platform must decide whether to use an AI content moderation system. It will reduce harmful content by 80% but will also incorrectly ban 5% of legitimate users monthly.",question:"The policy team uses a cost-benefit analysis to justify accepting the 5% false-positive rate. Which framework are they using?",options:["Deontology — content moderation is a universal duty","Utilitarianism — the overall benefit outweighs the harm to individuals","Virtue ethics — the team is acting responsibly","Social contract — users agreed to moderation in the terms of service"],correct:1,feedback:"Correct! Weighing overall outcomes — 80% harm reduction vs. 5% collateral impact — is <strong>utilitarian</strong> reasoning. A deontologist might object that even one unjustly banned user violates their rights, regardless of aggregate benefits."}
+];
+
+const quizQs=[
+  {q:"Which ethical theory focuses primarily on duties and universal rules rather than outcomes?",opts:["Utilitarianism","Deontology","Virtue ethics","Social contract theory"],correct:1,exp:"Deontology, associated with Kant, holds that some actions are intrinsically right or wrong based on duties — regardless of their consequences."},
+  {q:"A tech policy analyst asks: 'Does this algorithm produce the greatest benefit for the greatest number of users?' Which theory is guiding them?",opts:["Virtue ethics","Social contract theory","Utilitarianism","Deontology"],correct:2,exp:"Maximizing overall good for the greatest number is the core principle of utilitarianism."},
+  {q:"Which theory is most criticized for potentially ignoring minority groups if the majority benefits?",opts:["Deontology","Social contract theory","Virtue ethics","Utilitarianism"],correct:3,exp:"Utilitarianism can justify harm to a minority if the majority benefits enough — a common criticism. Social contract theory faces a related critique about excluding minority voices."},
+  {q:"Aristotle's idea that ethical behavior grows from cultivating good character traits describes which theory?",opts:["Utilitarianism","Deontology","Social contract theory","Virtue ethics"],correct:3,exp:"Virtue ethics, developed by Aristotle, focuses on character traits like honesty, courage, and integrity rather than rules or outcomes."},
+  {q:"When evaluating digital community standards, which theory asks whether users would collectively agree to the rules if they didn't know their own position in the system?",opts:["Utilitarianism","Virtue ethics","Social contract theory","Deontology"],correct:2,exp:"This describes Rawls' 'veil of ignorance' — a key social contract thought experiment. If you'd agree to a rule without knowing if you'd be helped or harmed by it, it's fair."}
+];
+
+let curQ=0,curQuiz=0,quizScore=0,scenariosAnswered=0;
+
+function goTo(n){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  const pct={1:20,2:40,3:60,4:80,5:100}[n]||20;
+  document.getElementById('prog').style.width=pct+'%';
+  document.querySelector('[role="progressbar"]').setAttribute('aria-valuenow',pct);
+  if(n===3){curQ=0;renderScenario()}
+  if(n===4){curQuiz=0;quizScore=0;renderQuiz()}
+}
+
+function showDetail(id){
+  document.querySelectorAll('.detail-panel').forEach(p=>{p.classList.remove('visible')});
+  document.querySelectorAll('.theory-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false')});
+  document.getElementById('detail-'+id).classList.add('visible');
+  document.getElementById('tc-'+id).classList.add('selected');
+  document.getElementById('tc-'+id).setAttribute('aria-pressed','true');
+}
+
+function renderScenario(){
+  if(curQ>=scenarios.length){goTo(4);return}
+  const s=scenarios[curQ];
+  document.getElementById('next-q-btn').disabled=true;
+  document.getElementById('next-q-btn').textContent=curQ<scenarios.length-1?'Next question →':'Go to quiz →';
+  let html=`<div class="scenario-box"><div class="scenario-icon" aria-hidden="true">${s.icon}</div><h3>${s.title}</h3><p>${s.text}</p></div>`;
+  html+=`<p class="quiz-question" id="sq-${curQ}">${s.question}</p>`;
+  html+=`<div class="options-list" role="group" aria-labelledby="sq-${curQ}">`;
+  s.opts.forEach((o,i)=>{html+=`<button class="option-btn" onclick="checkScenario(${i})" aria-label="Option ${i+1}: ${o}">${o}</button>`});
+  html+=`</div>`;
+  html+=`<div class="feedback-box" id="sfb"></div>`;
+  html+=`<p class="step-counter" aria-live="polite">Scenario ${curQ+1} of ${scenarios.length}</p>`;
+  document.getElementById('q-container').innerHTML=html;
+}
+
+function checkScenario(i){
+  const s=scenarios[curQ];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach((b,idx)=>{
+    b.disabled=true;
+    if(idx===s.correct)b.classList.add('correct');
+    else if(idx===i&&i!==s.correct)b.classList.add('incorrect');
+    else b.classList.add('reveal');
+  });
+  const fb=document.getElementById('sfb');
+  if(i===s.correct){fb.className='feedback-box correct';fb.innerHTML='<strong>Correct!</strong> '+s.feedback}
+  else{fb.className='feedback-box incorrect';fb.innerHTML='<strong>Not quite.</strong> '+s.feedback}
+  fb.style.display='block';
+  document.getElementById('next-q-btn').disabled=false;
+}
+
+function nextQ(){curQ++;renderScenario()}
+
+function renderQuiz(){
+  if(curQuiz>=quizQs.length){showResults();return}
+  const q=quizQs[curQuiz];
+  document.getElementById('quiz-next').disabled=true;
+  document.getElementById('quiz-next').textContent=curQuiz<quizQs.length-1?'Next →':'See results →';
+  let html=`<p class="quiz-question" id="qq-${curQuiz}">${q.q}</p>`;
+  html+=`<div class="options-list" role="group" aria-labelledby="qq-${curQuiz}">`;
+  q.opts.forEach((o,i)=>{html+=`<button class="option-btn" onclick="checkQuiz(${i})" aria-label="Option ${i+1}: ${o}">${o}</button>`});
+  html+=`</div>`;
+  html+=`<div class="feedback-box" id="qfb"></div>`;
+  html+=`<p class="step-counter" aria-live="polite">Question ${curQuiz+1} of ${quizQs.length}</p>`;
+  document.getElementById('quiz-container').innerHTML=html;
+}
+
+function checkQuiz(i){
+  const q=quizQs[curQuiz];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach((b,idx)=>{
+    b.disabled=true;
+    if(idx===q.correct)b.classList.add('correct');
+    else if(idx===i&&i!==q.correct)b.classList.add('incorrect');
+    else b.classList.add('reveal');
+  });
+  const fb=document.getElementById('qfb');
+  if(i===q.correct){quizScore++;fb.className='feedback-box correct';fb.innerHTML='<strong>Correct!</strong> '+q.exp}
+  else{fb.className='feedback-box incorrect';fb.innerHTML='<strong>Not quite.</strong> '+q.exp}
+  fb.style.display='block';
+  document.getElementById('quiz-next').disabled=false;
+}
+
+function nextQuiz(){curQuiz++;renderQuiz()}
+
+function showResults(){
+  document.getElementById('final-score').textContent=quizScore+'/'+quizQs.length;
+  const badges=document.getElementById('badge-row');
+  badges.innerHTML='';
+  if(quizScore===quizQs.length){badges.innerHTML='<span class="badge">Perfect score</span><span class="badge">Ethics scholar</span>'}
+  else if(quizScore>=3){badges.innerHTML='<span class="badge">Good work</span><span class="badge">Keep it up</span>'}
+  else{badges.innerHTML='<span class="badge">Keep studying</span><span class="badge">Review the theories</span>'}
+  goTo(5);
+}
+
+function restart(){
+  curQ=0;curQuiz=0;quizScore=0;
+  document.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('visible'));
+  document.querySelectorAll('.theory-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false')});
+  goTo(1);
+}
+</script>
