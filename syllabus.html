@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1: IT Ethics Interactive Lesson</title>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f6f9;
+        color: #222;
+        line-height: 1.6;
+    }
+
+    header {
+        background: #1e3c72;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    main {
+        padding: 20px;
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    section {
+        background: white;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        color: #1e3c72;
+    }
+
+    button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background: #2a5298;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:focus {
+        outline: 3px solid #ffcc00;
+    }
+
+    .feedback {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .draggable {
+        padding: 10px;
+        background: #d1d9ff;
+        margin: 5px 0;
+        cursor: move;
+    }
+
+    .dropzone {
+        border: 2px dashed #2a5298;
+        padding: 10px;
+        min-height: 50px;
+    }
+
+    .correct { color: green; }
+    .incorrect { color: red; }
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Week 1: Introduction to IT Ethics</h1>
+    <p>Instructor: Jaime Mahoney</p>
+</header>
+
+<main>
+
+<!-- LEARN SECTION -->
+<section>
+    <h2>Learn: Ethical Frameworks</h2>
+    <p>
+        Ethical theories help us analyze technology decisions. Each offers a different perspective:
+    </p>
+
+    <ul>
+        <li><strong>Utilitarianism:</strong> Focuses on maximizing overall good.</li>
+        <li><strong>Deontology:</strong> Emphasizes rules and duties.</li>
+        <li><strong>Virtue Ethics:</strong> Focuses on character and integrity.</li>
+        <li><strong>Social Contract Theory:</strong> Emphasizes fairness and cooperation.</li>
+    </ul>
+</section>
+
+<!-- INTERACTIVE SCENARIO -->
+<section>
+    <h2>Apply: Ethical Decision Scenario</h2>
+    <p>
+        A company collects user data without clear consent to improve its AI system.
+        Which ethical framework BEST supports protecting user privacy?
+    </p>
+
+    <button onclick="checkAnswer('utilitarianism')">Utilitarianism</button>
+    <button onclick="checkAnswer('deontology')">Deontology</button>
+    <button onclick="checkAnswer('virtue')">Virtue Ethics</button>
+    <button onclick="checkAnswer('social')">Social Contract</button>
+
+    <div id="scenarioFeedback" class="feedback" role="alert" aria-live="assertive"></div>
+</section>
+
+<!-- SEQUENCING ACTIVITY -->
+<section>
+    <h2>Practice: Ethical Reasoning Process</h2>
+    <p>Arrange the steps in the correct order:</p>
+
+    <div id="steps">
+        <div class="draggable" draggable="true">Apply ethical framework</div>
+        <div class="draggable" draggable="true">Identify the issue</div>
+        <div class="draggable" draggable="true">Analyze consequences</div>
+        <div class="draggable" draggable="true">Make decision</div>
+    </div>
+
+    <div class="dropzone" id="dropzone" aria-label="Drop ordered steps here"></div>
+
+    <button onclick="checkSequence()">Check Order</button>
+    <div id="sequenceFeedback" class="feedback"></div>
+</section>
+
+<!-- QUIZ -->
+<section>
+    <h2>Self-Assessment</h2>
+
+    <p>Which theory focuses on moral character?</p>
+    <button onclick="quiz('virtue')">Virtue Ethics</button>
+    <button onclick="quiz('utilitarianism')">Utilitarianism</button>
+
+    <div id="quizFeedback" class="feedback"></div>
+</section>
+
+</main>
+
+<script>
+function checkAnswer(answer) {
+    const feedback = document.getElementById("scenarioFeedback");
+
+    if (answer === "deontology") {
+        feedback.textContent = "Correct! Deontology emphasizes rules and rights like privacy.";
+        feedback.className = "feedback correct";
+    } else {
+        feedback.textContent = "Not quite. Think about which theory prioritizes rights and duties.";
+        feedback.className = "feedback incorrect";
+    }
+}
+
+function quiz(answer) {
+    const feedback = document.getElementById("quizFeedback");
+
+    if (answer === "virtue") {
+        feedback.textContent = "Correct!";
+        feedback.className = "feedback correct";
+    } else {
+        feedback.textContent = "Incorrect. Try again.";
+        feedback.className = "feedback incorrect";
+    }
+}
+
+// Drag and drop
+let dragged;
+
+document.addEventListener("dragstart", (event) => {
+    dragged = event.target;
+});
+
+document.getElementById("dropzone").addEventListener("dragover", (event) => {
+    event.preventDefault();
+});
+
+document.getElementById("dropzone").addEventListener("drop", (event) => {
+    event.preventDefault();
+    event.target.appendChild(dragged);
+});
+
+function checkSequence() {
+    const steps = document.getElementById("dropzone").children;
+    const correctOrder = [
+        "Identify the issue",
+        "Analyze consequences",
+        "Apply ethical framework",
+        "Make decision"
+    ];
+
+    let correct = true;
+
+    for (let i = 0; i < steps.length; i++) {
+        if (steps[i].textContent !== correctOrder[i]) {
+            correct = false;
+        }
+    }
+
+    const feedback = document.getElementById("sequenceFeedback");
+
+    if (correct) {
+        feedback.textContent = "Correct sequence!";
+        feedback.className = "feedback correct";
+    } else {
+        feedback.textContent = "Try again. Think about the logical reasoning process.";
+        feedback.className = "feedback incorrect";
+    }
+}
+</script>
+
+</body>
+</html>
